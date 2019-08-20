@@ -1,0 +1,90 @@
+
+No Linux Ajustar parametro de kernel para subir o Elasticsearch
+	$ sudo sysctl -w vm.max_map_count=262144
+
+executar o docker-compose
+	$ docker-compose up
+
+Elasticsearch
+--------------------------------------------------------------------------
+
+Conrfigurar o cors pro ElasticSearch(Essencial para conectar o grafana).
+
+no arquivo elasticsearch.yml inserir as 2 linhas abaixo:
+	http.cors.enabled: true
+	http.cors.allow-origin: "*"
+
+
+
+Path do arquivo
+>> /usr/share/elasticsearch ou /etc/elasticsearch
+
+Criar index (Tabela)
+--------------------------------------------------------------------------
+
+PUT para http://localhost:9200/file
+
+{
+  "mappings": {
+    "_doc": {
+      "dynamic_templates": [
+        {
+          "integers": {
+            "match_mapping_type": "long",
+            "mapping": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "strings": {
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "text",
+              "fields": {
+                "raw": {
+                  "type":  "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+Inserir registos nesse indice (nessa tabela)
+--------------------------------------------------------------------------
+
+POST para http://localhost:9200/file/_doc/1
+
+{
+    "name": "Grima",
+    "cidade": "Rio de Janeiro",
+    "Distanciakm": 10,
+    "regiaotarifa": "R1",
+    "responsavel:": "Duarte",
+    "slaemhoras":3
+    
+}
+
+POST para http://localhost:9200/file/_doc/2
+
+{
+    "name": "TESTE",
+    "cidade": "Rio de Janeiro",
+    "Distanciakm": 90,
+    "regiaotarifa": "R1",
+    "responsavel:": "Cosme",
+    "slaemhoras":3
+    
+}
+
+Grafana
+--------------------------------------------------------------------------
+
+Pra montar o dash que eu mostrei, só importar o arquivo grafana-template.json no grafana.
