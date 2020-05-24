@@ -1,7 +1,7 @@
 version: '3'
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.2
+  elasticsearch:  
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
     container_name: elasticsearch1
     ports:
       - "9200:9200"
@@ -10,11 +10,12 @@ services:
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "discovery.type=single-node"
     networks:
       - elastic
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.8.2
+    image: docker.elastic.co/kibana/kibana:7.7.0
     container_name: kibana1
     ports:
       - "5601:5601"
